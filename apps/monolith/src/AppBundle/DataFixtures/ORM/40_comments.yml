@@ -2,4 +2,5 @@ AppBundle\Entity\Comment:
     comment_donner_{1..10}:
         author: '@user*'
         content: '<text()>'
-        recipe: '@recipe_donner'
+        type: 'recipe'
+        reference: '11111111-1111-1111-1111-111111111111'

@@ -5,8 +5,21 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Recipe;
 use Doctrine\ORM\EntityRepository;
 
-class RecipeRepository
+class RecipeRepository extends EntityRepository
 {
+    /**
+     * @return Recipe[]
+     */
+    public function findLatest()
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.published IS NOT NULL')
+            ->orderBy('r.published', 'DESC')
+            ->getQuery()
+            ->execute();
+    }
+
+    /*
     public function findById($id)
     {
         $data = $this->curl('http://recipe/api/recipes/'.$id);
@@ -27,6 +40,7 @@ class RecipeRepository
 
         return $list;
     }
+    */
 
     private function curl($url)
     {

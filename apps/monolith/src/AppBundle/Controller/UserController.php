@@ -17,9 +17,12 @@ class UserController extends Controller
      */
     public function detailAction(Request $request, User $user)
     {
+        $recipes = $this->get('repository.recipe')->findLatest(['author_id' => $user->getId()]);
+
         // replace this example code with whatever you need
         return $this->render('user/detail.html.twig', [
-            'user' => $user
+            'user' => $user,
+            'recipes' => $recipes,
         ]);
     }
 }

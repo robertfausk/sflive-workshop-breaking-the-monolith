@@ -39,15 +39,6 @@ class User
 
     /**
      *
-     * One User may have many Recipes.
-     *
-     * @ORM\OneToMany(targetEntity="Recipe", mappedBy="author", cascade={"persist", "remove"})
-     * @var ArrayCollection
-     */
-    private $recipes;
-
-    /**
-     *
      * One User may have written many Comments.
      *
      * @ORM\OneToMany(targetEntity="Comment", mappedBy="author", cascade={"persist", "remove"})

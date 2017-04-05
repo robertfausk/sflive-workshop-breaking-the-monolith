@@ -2,153 +2,22 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
-
-/**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\RecipeRepository")
- * @ORM\Table(name="recipe")
- */
 class Recipe
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="uuid")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="AppBundle\Doctrine\UuidGenerator")
-     */
-    private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100, nullable=false)
-     * @var string
+     * @var array
      */
-    private $title;
+    private $data;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100)
-     */
-    private $subtitle;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", length=100, nullable=true)
-     */
-    private $image;
-
-    /**
-     * @var float
-     *
-     * @ORM\Column(type="float")
-     */
-    private $rating;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text", nullable=false)
-     */
-    private $instructions;
-
-    /**
-     * @var User
-     *
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="recipes")
-     * @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     */
-    private $author;
-
-    /**
-     * "Koch-/Backzeit"
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="cooking_time")
-     */
-    private $cookingTime;
-
-    /**
-     * "Ruhezeit"
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="resting_time")
-     */
-    private $restingTime;
-
-    /**
-     * "Arbeitszeit"
-     *
-     * @var int
-     *
-     * @ORM\Column(type="integer", name="preparation_time")
-     */
-    private $preparationTime;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", name="difficulty")
-     */
-    private $difficulty;
-
-    /**
-     *
-     * One Recipe has many Ingredients.
-     *
-     * @ORM\OneToMany(targetEntity="Ingredient", mappedBy="recipe", cascade={"persist", "remove"})
-     * @var ArrayCollection
-     */
-    private $ingredients;
-
-    /**
-     *
-     * One Recipe has many Comments.
-     *
-     * @ORM\OneToMany(targetEntity="Comment", mappedBy="recipe", cascade={"persist", "remove"})
-     * @var ArrayCollection
-     */
-    private $comments;
-
-    /**
-     * @var \DateTime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
-
-    /**
-     * @var \DateTime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     */
-    private $updated;
-
-    /**
-     * @var \DateTime $created
-     *
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $published;
-
-    /**
-     * Recipe constructor.
-     */
-    public function __construct()
+    public function __construct(array $data)
     {
-        $this->cookingTime = 0;
-        $this->restingTime = 0;
-        $this->difficulty = 'simple';
+        $this->data = $data;
+    }
+
+    private function get($key)
+    {
+        return isset($this->data[$key])? $this->data[$key] : null;
     }
 
     /**
@@ -164,7 +33,7 @@ class Recipe
      */
     public function getId()
     {
-        return $this->id;
+        return $this->get('id');
     }
 
     /**
@@ -172,7 +41,7 @@ class Recipe
      */
     public function getTitle()
     {
-        return $this->title;
+        return $this->get('title');
     }
 
     /**
@@ -180,7 +49,7 @@ class Recipe
      */
     public function getSubtitle()
     {
-        return $this->subtitle;
+        return $this->get('subtitle');
     }
 
     /**
@@ -188,7 +57,7 @@ class Recipe
      */
     public function getRating()
     {
-        return $this->rating;
+        return $this->get('rating');
     }
 
     /**
@@ -196,15 +65,7 @@ class Recipe
      */
     public function getInstructions()
     {
-        return $this->instructions;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
+        return $this->get('instructions');
     }
 
     /**
@@ -212,7 +73,7 @@ class Recipe
      */
     public function getPublished()
     {
-        return $this->published;
+        return new \DateTime($this->get('published'));
     }
 
     /**
@@ -220,7 +81,7 @@ class Recipe
      */
     public function getCookingTime()
     {
-        return $this->cookingTime;
+        return $this->get('cookingTime');
     }
 
     /**
@@ -228,7 +89,7 @@ class Recipe
      */
     public function getRestingTime()
     {
-        return $this->restingTime;
+        return $this->get('restingTime');
     }
 
     /**
@@ -236,7 +97,7 @@ class Recipe
      */
     public function getPreparationTime()
     {
-        return $this->preparationTime;
+        return $this->get('preparationTime');
     }
 
     /**
@@ -244,23 +105,35 @@ class Recipe
      */
     public function getDifficulty()
     {
-        return $this->difficulty;
+        return $this->get('difficulty');
     }
 
     /**
-     * @return Ingredients[]
+     * @return Ingredient[]
      */
     public function getIngredients()
     {
-        return $this->ingredients;
+        $raw = $this->get('ingredients');
+
+        $list = [];
+        foreach ($raw as $data) {
+            $list[] = new Ingredient($data);
+        }
+
+        return $list;
     }
 
     /**
-     * @return Comments[]
+     * @return Author
      */
-    public function getComments()
+    public function getAuthor()
     {
-        return $this->comments;
+        return new Author(
+            [
+                'id' => $this->get('author_id'),
+                'name' => $this->get('author_name')
+            ]
+        );
     }
 
     /**
@@ -268,6 +141,6 @@ class Recipe
      */
     public function getImage()
     {
-        return $this->image;
+        return $this->get('image');
     }
 }
