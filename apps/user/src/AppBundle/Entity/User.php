@@ -2,14 +2,15 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
- * @ORM\Table(name="comment")
+ * @ORM\Entity
+ * @ORM\Table(name="user")
  */
-class Comment
+class User
 {
     /**
      * @var string
@@ -17,44 +18,24 @@ class Comment
      * @ORM\Column(type="uuid")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="CUSTOM")
-     * @ORM\CustomIdGenerator(class="Ramsey\Uuid\Doctrine\UuidGenerator")
+     * @ORM\CustomIdGenerator(class="AppBundle\Doctrine\UuidGenerator")
      */
     private $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="string")
      */
-    private $type;
+    private $name;
+
 
     /**
      * @var string
      *
-     * @ORM\Column(type="string", length=100, nullable=false)
+     * @ORM\Column(type="text", nullable=true)
      */
-    private $reference;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", name="author_id", length=100, nullable=false)
-     */
-    private $authorId;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="string", name="author_name", length=100, nullable=false)
-     */
-    private $authorName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(type="text")
-     */
-    private $content;
+    private $about;
 
     /**
      * @var \DateTime $created
@@ -88,19 +69,27 @@ class Comment
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
+    /**
      * @return string
      */
     public function getId()
     {
-        return $this->id;
+        return (string) $this->id;
     }
 
     /**
-     * @return User
+     * @return string
      */
-    public function getAuthor()
+    public function getName()
     {
-        return new Author(['id' => $this->authorId, 'name' => $this->authorName]);
+        return $this->name;
     }
 
     /**
@@ -112,18 +101,18 @@ class Comment
     }
 
     /**
-     * @return string
-     */
-    public function getContent()
-    {
-        return $this->content;
-    }
-
-    /**
      * @return \DateTime
      */
     public function getCreated()
     {
         return $this->created;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAbout()
+    {
+        return $this->about;
     }
 }

@@ -2,5 +2,5 @@ app:
     resource: "@AppBundle/Controller/"
     type:     annotation
 
-#user:
-#    path: "/users/{user}"
+user:
+    path: "/users/{user}"
