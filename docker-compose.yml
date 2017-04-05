@@ -17,7 +17,7 @@ services:
     container_name: workshop-monolith
     build: docker/moby-dick
     ports:
-     - "8000:80"
+     - "8001:80"
     volumes:
      - ./apps/monolith:/code
     depends_on:
@@ -51,3 +51,19 @@ services:
     depends_on:
       - recipe-database
       - recipe-init
+  newsletter:
+    container_name: workshop-newsletter
+    build: docker/moby-dick
+    ports:
+     - "8003:80"
+    volumes:
+     - ./apps/newsletter:/code
+
+  varnish:
+    container_name: workshop-varnish
+    ports:
+     - "8000:80"
+    build: docker/varnish
+    depends_on:
+      - monolith
+      - newsletter

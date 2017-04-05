@@ -11,7 +11,7 @@ backend newsletter {
 }
 
 sub vcl_recv {
-    if (req.url ~ "^/newsletter") {
+    if (req.url ~ "/newsletter") {
         set req.backend_hint = newsletter;
     } else {
         set req.backend_hint = default;

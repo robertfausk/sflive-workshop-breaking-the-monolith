@@ -17,6 +17,20 @@ $app['twig'] = $app->extend('twig', function ($twig, $app) {
     return $twig;
 });
 
+$app->get('/newsletter/box', function() use($app) {
+    return $app['twig']->render('box.html.twig', []);
+});
+
+$app->get('/newsletter/bootstrap', function() use($app) {
+    return $app['twig']->render('bootstrap.html.twig', []);
+});
+
+$app->post('/newsletter', function() use($app) {
+    // we do awesome stuff
+
+    return $app['twig']->render('thankyou.html.twig', []);
+});
+
 $app->get('/newsletter/ping', function() use($app) {
     return '[Newsletter] Pong!';
 });
